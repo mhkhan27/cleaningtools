@@ -1,20 +1,21 @@
 library(dplyr)
 library(tidyr)
+library(testthat)
 
 test_that("Outliers check", {
 
   ### test cols to add
 
-  outliers1 <- check_outliers(df = raw_data,uuid_col_name = "X_uuid",columns_to_remove = "enumerator_num",strongness_factor = 1.5)
-  outliers2 <- check_outliers(raw_data,uuid_col_name = "X_uuid",strongness_factor = 1.5)
+  outliers1 <- check_outliers(df = cleaningtools_raw_data,uuid_col_name = "X_uuid",columns_to_remove = "enumerator_num",strongness_factor = 1.5)
+  outliers2 <- check_outliers(cleaningtools_raw_data,uuid_col_name = "X_uuid",strongness_factor = 1.5)
 
   expect_false("enumerator_num" %in% outliers1$potential_outliers$question)
   expect_true("uuid" %in% names(outliers1$potential_outliers))
   expect_true("enumerator_num" %in% outliers2$potential_outliers$question)
 
   ## test with null in unique number
-  outliers3 <- check_outliers(raw_data,uuid_col_name = "X_uuid",minimum_unique_value_of_variable = 10)
-  outliers4 <- check_outliers(raw_data,uuid_col_name = "X_uuid",minimum_unique_value_of_variable = NULL)
+  outliers3 <- check_outliers(cleaningtools_raw_data,uuid_col_name = "X_uuid",minimum_unique_value_of_variable = 10)
+  outliers4 <- check_outliers(cleaningtools_raw_data,uuid_col_name = "X_uuid",minimum_unique_value_of_variable = NULL)
 
   expect_false("air_coolers_nb" %in% outliers3$potential_outliers$question)
   expect_true("air_coolers_nb" %in% outliers4$potential_outliers$question)
@@ -90,3 +91,25 @@ test_that("outlier_check returns correct results", {
 
 
 
+test_that("Outliers check with kobo", {
+
+
+  expect_warning(check_outliers(df = cleaningtools_raw_data,uuid_col_name  = "X_uuid",kobo_survey = cleaningtools_survey,
+                                kobo_choices = NULL,strongness_factor = 3))
+  expect_warning(check_outliers(df = cleaningtools_raw_data,uuid_col_name  = "X_uuid",kobo_survey = NULL,
+                                kobo_choices = cleaningtools_choices,strongness_factor = 3))
+  expect_no_warning(check_outliers(df = cleaningtools_raw_data,uuid_col_name  = "X_uuid",kobo_survey = NULL,
+                                kobo_choices = NULL,strongness_factor = 3))
+
+
+  a <- cleaningtools_raw_data |> mutate_if(is.logical,as.integer)
+  outliers_xx <- check_outliers(df = a,uuid_col_name  = "X_uuid",kobo_survey = cleaningtools_survey,
+                                kobo_choices = cleaningtools_choices,strongness_factor = 3,
+                                remove_choice_multiple = F)
+  outliers_yy <- check_outliers(df = a,uuid_col_name  = "X_uuid",strongness_factor = 3,
+                                remove_choice_multiple = T)
+
+  testthat::expect_true("primary_livelihood.support" %in% outliers_xx$potential_outliers$question)
+  testthat::expect_false("primary_livelihood.support" %in% outliers_yy$potential_outliers$question)
+
+  })

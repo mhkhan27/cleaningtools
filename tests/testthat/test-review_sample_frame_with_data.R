@@ -1,11 +1,11 @@
 test_that("review_sample_frame", {
 
-  cl <- cleaningtools::clean_data |> dplyr::mutate(
+  cl <- cleaningtools::cleaningtools_clean_data |> dplyr::mutate(
     consent = c(rep("no",10),rep("yes",546),rep("yes_yes",5),rep("no_no",17)
     ))
 
   #######   check warning ############
-  testthat::expect_warning(review_sample_frame_with_dataset(sample_frame = cleaningtools::sample_frame,
+  testthat::expect_warning(review_sample_frame_with_dataset(sample_frame = cleaningtools::cleaningtools_sample_frame,
                                                             sample_frame_strata_col = "Neighbourhood",
                                                             sample_frame_target_survey_col ="Total.no.of.HH",
                                                             clean_data = cl,
@@ -13,7 +13,7 @@ test_that("review_sample_frame", {
                                                             consent_column = "consent",
                                                             value_for_consent_yes = c("yes_yes","yes")))
 
-  testthat::expect_warning(review_sample_frame_with_dataset(sample_frame = (cleaningtools::sample_frame |> dplyr::select(-c("Remaining"))),
+  testthat::expect_warning(review_sample_frame_with_dataset(sample_frame = (cleaningtools::cleaningtools_sample_frame |> dplyr::select(-c("Remaining"))),
                                                             sample_frame_strata_col = "Neighbourhood",
                                                             sample_frame_target_survey_col ="Total.no.of.HH",
                                                             clean_data = cl,
@@ -21,7 +21,7 @@ test_that("review_sample_frame", {
                                                             consent_column = "consent",
                                                             value_for_consent_yes = c("yes_yes","yes")))
 
-  testthat::expect_no_warning(review_sample_frame_with_dataset(sample_frame = (cleaningtools::sample_frame |> dplyr::select(-c("Remaining","Collected"))),
+  testthat::expect_no_warning(review_sample_frame_with_dataset(sample_frame = (cleaningtools::cleaningtools_sample_frame |> dplyr::select(-c("Remaining","Collected"))),
                                                                sample_frame_strata_col = "Neighbourhood",
                                                                sample_frame_target_survey_col ="Total.no.of.HH",
                                                                clean_data = cl,
@@ -30,7 +30,7 @@ test_that("review_sample_frame", {
                                                                value_for_consent_yes = c("yes_yes","yes")))
 
   ### check error
-  testthat::expect_error(review_sample_frame_with_dataset(sample_frame = cleaningtools::sample_frame,
+  testthat::expect_error(review_sample_frame_with_dataset(sample_frame = cleaningtools::cleaningtools_sample_frame,
                                                           sample_frame_strata_col = "Neghbourhood",
                                                           sample_frame_target_survey_col ="Total.no.of.HH",
                                                           clean_data = cl,
@@ -39,7 +39,7 @@ test_that("review_sample_frame", {
                                                           value_for_consent_yes = c("yes_yes","yes")),
                          "Neghbourhood not found in the sample frame")
 
-  testthat::expect_error(review_sample_frame_with_dataset(sample_frame = cleaningtools::sample_frame,
+  testthat::expect_error(review_sample_frame_with_dataset(sample_frame = cleaningtools::cleaningtools_sample_frame,
                                                           sample_frame_strata_col = "Neighbourhood",
                                                           sample_frame_target_survey_col ="Total_no.of.HH",
                                                           clean_data = cl,
@@ -48,7 +48,7 @@ test_that("review_sample_frame", {
                                                           value_for_consent_yes = c("yes_yes","yes")),
                          "Total_no.of.HH not found in the sample frame")
 
-  testthat::expect_error(review_sample_frame_with_dataset(sample_frame = cleaningtools::sample_frame,
+  testthat::expect_error(review_sample_frame_with_dataset(sample_frame = cleaningtools::cleaningtools_sample_frame,
                                                           sample_frame_strata_col = "Neighbourhood",
                                                           sample_frame_target_survey_col ="Total.no.of.HH",
                                                           clean_data = cl,
@@ -57,7 +57,7 @@ test_that("review_sample_frame", {
                                                           value_for_consent_yes = c("yes_yes","yes")),
                          "neghbourhood not found in the clean data")
 
-  testthat::expect_error(review_sample_frame_with_dataset(sample_frame = cleaningtools::sample_frame,
+  testthat::expect_error(review_sample_frame_with_dataset(sample_frame = cleaningtools::cleaningtools_sample_frame,
                                                           sample_frame_strata_col = "Neighbourhood",
                                                           sample_frame_target_survey_col ="Total.no.of.HH",
                                                           clean_data = cl,
@@ -66,7 +66,7 @@ test_that("review_sample_frame", {
                                                           value_for_consent_yes = c("yes_yes","yes")),
                          "cnsent not found in the clean data")
 
-  testthat::expect_error(review_sample_frame_with_dataset(sample_frame = cleaningtools::sample_frame,
+  testthat::expect_error(review_sample_frame_with_dataset(sample_frame = cleaningtools::cleaningtools_sample_frame,
                                                           sample_frame_strata_col = "Neighbourhood",
                                                           sample_frame_target_survey_col ="Total.no.of.HH",
                                                           clean_data = cl,
@@ -79,10 +79,10 @@ test_that("review_sample_frame", {
   ## strata checks
 
   cl2 <- cl
-  cl2$neighbourhood <- cl2$neighbourhood |> stringr::str_replace_all("al_askary1","al_askary111") |>
-    stringr::str_replace_all("askari_2","aaaskari_2")
+  cl2$neighbourhood <- cl2$neighbourhood |> stringr::str_replace_all("A1","al_ry111") |>
+    stringr::str_replace_all("Bx1","sdsdsfdfdfdfsdadsgvs")
 
-  testthat::expect_error(review_sample_frame_with_dataset(sample_frame = (cleaningtools::sample_frame |> dplyr::select(-c("Remaining","Collected"))),
+  testthat::expect_error(review_sample_frame_with_dataset(sample_frame = (cleaningtools::cleaningtools_sample_frame |> dplyr::select(-c("Remaining","Collected"))),
                                                           sample_frame_strata_col = "Neighbourhood",
                                                           sample_frame_target_survey_col ="Total.no.of.HH",
                                                           clean_data = cl2,
@@ -107,17 +107,12 @@ test_that("review_sample_frame", {
                                              "Ninewa", "Ninewa", "Ninewa", "Ninewa", "Ninewa", "Ninewa", "Ninewa",
                                              "Ninewa", "Ninewa", "Ninewa", "Ninewa", "Ninewa", "Ninewa", "Ninewa",
                                              "Ninewa", "Ninewa", "Ninewa", "Ninewa", "Ninewa", "Ninewa"),
-                             Neighbourhood = c("al_askary1", "al_askary2", "al_askary3",
-                                               "al_askary4", "al_jazeera1", "al_jazeera2", "al_jazeera3",
-                                               "al_jazeera4", "al_kefah_al_shimaly", "al_khadraa1", "al_khadraa2",
-                                               "al_kifah_aljinubi1", "al_kifah_aljinubi2", "al_mualimin",
-                                               "al_muntadhar", "al_muthana_1", "al_muthana_2", "al_naser1",
-                                               "al_nasir2", "al_nasir3", "al_nasir4", "al_needa", "al_noor",
-                                               "al_qadissiya_1", "al_qadissiya_2", "al_qala_1", "al_rabea",
-                                               "al_sada_village", "al_salam", "al_senaa_al_shamaliya", "al_sinaa_south",
-                                               "al_tahrir", "al_taleaa_1", "al_taleaa_3", "al_uruba_1",
-                                               "al_uruba_2", "al_wahda1", "al_wahda2", "al_wahda3", "al_zahra",
-                                               "askari_2", "saad"),
+                             Neighbourhood = c("A1", "A2", "A3", "A4", "B1", "B2", "B3", "B4", "c", "Bx1",
+                                               "Bx2", "Bdd1", "Bdd2", "cc", "Bcccc", "Bccccccc_1", "Bccccccc_2",
+                                               "r1", "tr2", "tr3", "tr4", "oyt", "frgdf", "rtrtrtr_1", "rtrtrtr_2",
+                                               "fdfddfdfdfd_1", "ofhfyt", "yttytyty", "ghghg", "sdddddds", "dddddddd",
+                                               "eewr", "rfbv_1", "rfbv_3", "ftgtrh_1", "ftgtrh_2", "ytjhfsd1",
+                                               "ytjhfsd2", "ytjhfsd3", "dgfd", "hgh", "ethgfbfds"),
                              Total.no.of.HH = c(22L, 19L, 5L, 6L,
                                                 12L, 15L, 5L, 2L, 27L, 13L, 10L, 9L, 11L, 16L, 11L, 14L,
                                                 14L, 4L, 27L, 14L, 8L, 35L, 23L, 18L, 24L, 14L, 13L, 6L,
@@ -132,7 +127,7 @@ test_that("review_sample_frame", {
 
 
 
-  actual <- review_sample_frame_with_dataset(sample_frame = (cleaningtools::sample_frame |> dplyr::select(-c("Remaining","Collected"))),
+  actual <- review_sample_frame_with_dataset(sample_frame = (cleaningtools::cleaningtools_sample_frame |> dplyr::select(-c("Remaining","Collected"))),
                                              sample_frame_strata_col = "Neighbourhood",
                                              sample_frame_target_survey_col ="Total.no.of.HH",
                                              clean_data = cl,

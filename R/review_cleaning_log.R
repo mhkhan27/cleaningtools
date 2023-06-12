@@ -12,8 +12,8 @@
 #' @examples
 #' \dontrun{
 #' create_cleaning_log(
-#' raw_data = cleaningtools::raw_data, raw_data_uuid = "X_uuid",
-#' clean_data = cleaningtools::clean_data, clean_data_uuid = "X_uuid",
+#' raw_data = cleaningtools::cleaningtools_raw_data, raw_data_uuid = "X_uuid",
+#' clean_data = cleaningtools::cleaningtools_clean_data, clean_data_uuid = "X_uuid",
 #' check_for_deletion_log = TRUE, check_for_variable_name = TRUE
 #' )}
 
@@ -84,7 +84,7 @@ create_cleaning_log <- function(raw_data = raw_data,
     }
 
 
-    ## varaible added
+    ## variable added
 
     added_variable_name <- names(clean_data)[!names(clean_data) %in% names(raw_data)]
 
