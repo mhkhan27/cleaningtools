@@ -2,42 +2,51 @@
 % Please edit documentation in R/recreate_parent_column.R
 \name{recreate_parent_column}
 \alias{recreate_parent_column}
-\title{This function recreates the concerted columns for select multiple questions}
+\title{This function recreates the columns for select multiple questions}
 \usage{
 recreate_parent_column(
-  df,
-  uuid = "uuid",
-  kobo_survey_sheet = NULL,
-  kobo_choices_sheet = NULL,
-  sm_sep = "."
+  dataset,
+  uuid_column = "uuid",
+  kobo_survey = NULL,
+  kobo_choices = NULL,
+  sm_separator = ".",
+  cleaning_log_to_append = NULL
 )
 }
 \arguments{
-\item{df}{data frame}
+\item{dataset}{data frame}
 
-\item{uuid}{Unique ID column(Default is uuid).}
+\item{uuid_column}{uuid column in the dataset. Default is "uuid".}
 
-\item{kobo_survey_sheet}{Kobo survey tab}
+\item{kobo_survey}{Kobo survey sheet.}
 
-\item{kobo_choices_sheet}{Kobo choices tab}
+\item{kobo_choices}{Kobo choices sheet.}
 
-\item{sm_sep}{Separator between question and choice. Default is ..}
+\item{sm_separator}{Separator for choice multiple questions. The default is "."}
+
+\item{cleaning_log_to_append}{A cleaning log where to add the changes from this functions.
+Names of the log from this function are  "uuid", "question", "change_type", "new_value",
+"old_value", "comment". If the cleaning_log_to_append names are not matching, the only way is to
+create without a cleaning_log_to_append, and rename the columns and then bind.}
 }
 \description{
-This function recreates the concerted columns for select multiple questions
+This function recreates the columns for select multiple questions
 }
 \examples{
 test_data <- dplyr::tibble(
-uuid = paste0("uuid_",1:6),
-gender = rep(c("male","female"),3),
-reason = c("xx,yy","xx,zy",
-          "zy","xx,xz,zy",
-          NA_character_,"xz"),
-reason.xx = c(0,1,0,1,0,0),
-reason.yy = c(1,0,0,0,1,0),
-reason.xz = c(0,0,0,1,0,1),
-reason.zy = c(0,1,1,1,0,0),
-reason_zy = c(NA_character_,"A","B","C",NA_character_,NA_character_))
-recreate_parent_column(df = test_data, uuid = "uuid", sm_sep = ".")
+  uuid = paste0("uuid_", 1:6),
+  gender = rep(c("male", "female"), 3),
+  reason = c(
+    "xx,yy", "xx,zy",
+    "zy", "xx,xz,zy",
+    NA_character_, "xz"
+  ),
+  reason.xx = c(0, 1, 0, 1, 0, 0),
+  reason.yy = c(1, 0, 0, 0, 1, 0),
+  reason.xz = c(0, 0, 0, 1, 0, 1),
+  reason.zy = c(0, 1, 1, 1, 0, 0),
+  reason_zy = c(NA_character_, "A", "B", "C", NA_character_, NA_character_)
+)
+recreate_parent_column(dataset = test_data, uuid_column = "uuid", sm_separator = ".")
 
 }

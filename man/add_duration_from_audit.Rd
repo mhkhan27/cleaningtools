@@ -5,9 +5,9 @@
 \title{Adds duration from the audit file}
 \usage{
 add_duration_from_audit(
-  .dataset,
+  dataset,
   col_name_prefix = "duration_audit",
-  uuid_var = "_uuid",
+  uuid_column = "uuid",
   audit_list,
   start_question = NULL,
   end_question = NULL,
@@ -15,11 +15,11 @@ add_duration_from_audit(
 )
 }
 \arguments{
-\item{.dataset}{a dataframe to add the duration.}
+\item{dataset}{dataset to add the duration}
 
 \item{col_name_prefix}{string character to be used for the prefix of new columns}
 
-\item{uuid_var}{string character for the uuid variable name in the dataset}
+\item{uuid_column}{uuid column in the dataset. Default is uuid.}
 
 \item{audit_list}{list of dataframe that are the audit file with the uuid of
 each interview as name of the dataframe.}
@@ -38,33 +38,53 @@ Wrapper around create_duration_from_audit_with_start_end and
 create_duration_from_audit_sum_all to add the duration to the dataset.
 }
 \examples{
-list_audit <- list(uuid1 = data.frame(event = c("form start", rep("question", 5)),
-                                      node = c("", paste0("/xx/question", 1:5)),
-                                      start = c(1661415887295, 1661415887301,
-                                                1661415890819, 1661415892297,
-                                                1661415893529, 1661415894720),
-                                      end = c(NA, 1661415890790, 1661415892273,
-                                              1661415893506, 1661415894703,
-                                              1661415896452)),
-                   uuid2 = data.frame(event = c("form start", rep("question", 5)),
-                                      node = c("", paste0("/xx/question", 1:5)),
-                                      start = c(1661415887295,1661415887301,1661415890819,
-                                                1661415892297,1661415893529,1661415894720),
-                                      end = c(NA, 1661415890790, 1661415892273,
-                                      1661415893506, 1661415894703, 1661415896452)))
-some_dataset <- data.frame(X_uuid = c("uuid1", "uuid2"),
-                           question1 = c("a","b"),
-                           question2 = c("a","b"),
-                           question3 = c("a","b"),
-                           question4 = c("a","b"),
-                           question5 = c("a","b"))
-add_duration_from_audit(some_dataset, uuid_var = "X_uuid", audit_list = list_audit)
-add_duration_from_audit(some_dataset, uuid_var = "X_uuid", audit_list = list_audit,
-                        start_question = "question1",
-                        end_question = "question3",
-                        sum_all = FALSE)
-add_duration_from_audit(some_dataset, uuid_var = "X_uuid", audit_list = list_audit,
-                        start_question = "question1",
-                        end_question = "question3",
-                        sum_all = TRUE)
+list_audit <- list(
+  uuid1 = data.frame(
+    event = c("form start", rep("question", 5)),
+    node = c("", paste0("/xx/question", 1:5)),
+    start = c(
+      1661415887295, 1661415887301,
+      1661415890819, 1661415892297,
+      1661415893529, 1661415894720
+    ),
+    end = c(
+      NA, 1661415890790, 1661415892273,
+      1661415893506, 1661415894703,
+      1661415896452
+    )
+  ),
+  uuid2 = data.frame(
+    event = c("form start", rep("question", 5)),
+    node = c("", paste0("/xx/question", 1:5)),
+    start = c(
+      1661415887295, 1661415887301, 1661415890819,
+      1661415892297, 1661415893529, 1661415894720
+    ),
+    end = c(
+      NA, 1661415890790, 1661415892273,
+      1661415893506, 1661415894703, 1661415896452
+    )
+  )
+)
+some_dataset <- data.frame(
+  X_uuid = c("uuid1", "uuid2"),
+  question1 = c("a", "b"),
+  question2 = c("a", "b"),
+  question3 = c("a", "b"),
+  question4 = c("a", "b"),
+  question5 = c("a", "b")
+)
+add_duration_from_audit(some_dataset, uuid_column = "X_uuid", audit_list = list_audit)
+add_duration_from_audit(some_dataset,
+  uuid_column = "X_uuid", audit_list = list_audit,
+  start_question = "question1",
+  end_question = "question3",
+  sum_all = FALSE
+)
+add_duration_from_audit(some_dataset,
+  uuid_column = "X_uuid", audit_list = list_audit,
+  start_question = "question1",
+  end_question = "question3",
+  sum_all = TRUE
+)
 }
